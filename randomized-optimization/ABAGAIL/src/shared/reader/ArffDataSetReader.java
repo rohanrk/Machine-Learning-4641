@@ -36,14 +36,14 @@ public class ArffDataSetReader extends DataSetReader {
 	public DataSet read() throws Exception {
 		BufferedReader in = new BufferedReader(new FileReader(file));
 		try {
-    		List<Map<String, Double>> attributes = processAttributes(in);
-    		Instance[] instances = processInstances(in, attributes);
-    		DataSet set = new DataSet(instances);
-    		set.setDescription(new DataSetDescription(set));
-    		return set;
+			List<Map<String, Double>> attributes = processAttributes(in);
+			Instance[] instances = processInstances(in, attributes);
+			DataSet set = new DataSet(instances);
+			set.setDescription(new DataSetDescription(set));
+			return set;
 		} finally {
-    		// don't forget to close the buffer
-    		in.close();
+			// don't forget to close the buffer
+			in.close();
 		}
 	}
 
@@ -54,22 +54,22 @@ public class ArffDataSetReader extends DataSetReader {
 	 * @throws IOException
 	 */
 	private List<Map<String, Double>> processAttributes(BufferedReader in)
-		throws IOException {
+			throws IOException {
 		String line = in.readLine();
 		List<Map<String, Double>> attributes
-			= new ArrayList<Map<String, Double>>();
+				= new ArrayList<Map<String, Double>>();
 		while (line != null && line.toLowerCase().indexOf(DATA_TAG) == -1) {
 			if (!line.isEmpty() && line.charAt(0) != '%') {
 				String[] parts = line.split("\\s", SPLIT_LIMIT);
 				if (parts[0].equalsIgnoreCase(ATTRIBUTE_TAG)) {
 					// process any attribute values
-				    //NOTE: for REAL and INTEGER types, this will do nothing but those types are handled
-				    // in processInstances
+					//NOTE: for REAL and INTEGER types, this will do nothing but those types are handled
+					// in processInstances
 					String[] values = parts[2].replaceAll(" |\\{|\\}|'","").split(",");
 					double id = 0.0;
 					Map<String, Double> valMap = new HashMap<String, Double>();
 					for (String s : values) {
-					    s = s.trim(); //trim off whitespace
+						s = s.trim(); //trim off whitespace
 						valMap.put(s, id++);
 					}
 					attributes.add(valMap);
@@ -81,7 +81,7 @@ public class ArffDataSetReader extends DataSetReader {
 	}
 
 	private Instance[] processInstances(BufferedReader in,
-			List<Map<String, Double>> valueMaps) throws IOException {
+										List<Map<String, Double>> valueMaps) throws IOException {
 		List<Instance> instances = new ArrayList<Instance>();
 		String line = in.readLine();
 		Pattern pattern = Pattern.compile("[ ,]+");
@@ -90,22 +90,22 @@ public class ArffDataSetReader extends DataSetReader {
 				String[] values = pattern.split(line.trim());
 				double[] ins = new double[values.length];
 				for (int i = 0; i < values.length; i++) {
-				    //some values are single quoted (especially in datafiles bundled
-				    // with weka)
+					//some values are single quoted (especially in datafiles bundled
+					// with weka)
 					String v = values[i].replaceAll("'", "");
 					// defaulting to 0 if attribute value unknown.
 					double d = 0;
 					try {
-	                	d = Double.parseDouble(v);
-	                }
-	                catch(NumberFormatException e){
-	                	if (valueMaps.get(i).containsKey(v)) {
+						d = Double.parseDouble(v);
+					}
+					catch(NumberFormatException e){
+						if (valueMaps.get(i).containsKey(v)) {
 							d = valueMaps.get(i).get(v);
 						}
-	                }
+					}
 					ins[i] = d;
 				}
-				Instance i = new Instance(new DenseVector(ins), new Instance(Double.parseDouble(values[values.length - 1])));
+				Instance i = new Instance(new DenseVector(Arrays.copyOfRange(ins, 0, ins.length - 1)), new Instance(ins[ins.length - 1]));
 				instances.add(i);
 			}
 			line = in.readLine();

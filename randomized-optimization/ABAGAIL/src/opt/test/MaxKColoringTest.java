@@ -39,7 +39,7 @@ import shared.FixedIterationTrainer;
  */
 public class MaxKColoringTest {
     /** The n value */
-    private static final int N = 50; // number of vertices
+    private static final int N = 60; // number of vertices
     private static final int L =4; // L adjacent nodes per vertex
     private static final int K = 8; // K possible colors
     /**
