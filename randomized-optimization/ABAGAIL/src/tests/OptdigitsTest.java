@@ -36,8 +36,8 @@ public class OptdigitsTest {
 
     // Change these for Genetic Algorithms
     private static final int INITIAL_POPULATION = 200;
-    private static final int MATES_PER_ITERATION = 25;
-    private static final int MUTATIONS_PER_ITERATION = 100;
+    private static final int MATES_PER_ITERATION = 50;
+    private static final int MUTATIONS_PER_ITERATION = 80;
 
     private static Instance[] instances;
     private static Instance[] trainInstances;
@@ -148,7 +148,13 @@ public class OptdigitsTest {
         end = System.nanoTime();
         testingTime = (end - start) / Math.pow(10, 9);
         fw.write(trainingIterations + ", " + df.format((correct / (correct + incorrect)) *100) + ", " +
-                        df.format(trainingTime) + ", " + df.format(testingTime) + "\n");
+                        df.format(trainingTime) + ", " + df.format(testingTime));
+        if (oa instanceof SimulatedAnnealing) {
+            fw.write(", " + DEFAULT_INIT_TEMP + ", " + DEFAULT_COOLING_FACTOR);
+        } else if (oa instanceof StandardGeneticAlgorithm) {
+            fw.write(", " + INITIAL_POPULATION + ", " + MATES_PER_ITERATION + ", " + MUTATIONS_PER_ITERATION);
+        }
+        fw.write("\n");
         fw.flush();
         fw.close();
 
