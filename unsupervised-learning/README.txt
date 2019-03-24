@@ -34,6 +34,10 @@ IndependentComponents -W -A -1 -N 200 -T 1E-4
 
 *Note: You must install the student packages package in Weka in order to use its Independent Components filter https://github.com/cgearhart/students-filters*
 
+In order to analyze the kurtoses, icaAnalysis.py is used. Run it with
+
+Python3 icaAnalysis.py <Path-to-arff-file-after-ICA-applied>
+
 Randomized Projections
 
 Weka -> Preprocessing -> filters -> unsupervised -> attributes -> RandomizedProjection
